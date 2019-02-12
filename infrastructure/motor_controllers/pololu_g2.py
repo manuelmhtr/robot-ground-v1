@@ -15,10 +15,34 @@ MIN_SPEED = -100
 MAX_TARGET_SPEED = 3200
 MIN_TARGET_SPEED = -3200
  
-class SmcG2Serial(object):
-  def __init__(self, port, device_number=None):
-    self.port = port
+class PololuG2MotorController(object):
+  def __init__(self, device_number, port_name):
+    # Choose the serial port name.
+    # Linux USB example:  "/dev/ttyACM0"  (see also: /dev/serial/by-id)
+    # macOS USB example:  "/dev/cu.usbmodem001234562"
+    # Windows example:    "COM6"
+    self.port_name = port_name
+
+    # Change this to a number between 0 and 127 that matches the device number of
+    # your SMC if there are multiple serial devices on the line and you want to
+    # use the Pololu Protocol.
     self.device_number = device_number
+
+    # Change this to a number between 0 and 127 that matches the device number of
+    # your SMC if there are multiple serial devices on the line and you want to
+    # use the Pololu Protocol.
+    self.baud_rate = BAUD_RATE
+
+    self.port = serial.Serial(self.port_name, self.baud_rate, timeout=0.1, write_timeout=0.1)
+    self.smc = SmcG2Serial(port, self.device_number)
+
+    self.smc.exit_safe_start()
+    self.set_speed(INITIAL_SPEED)
+  
+  def set_speed(self, speed):
+    self.speed = speed
+    self.target_speed = get_target_speed(self.speed)
+    self.smc.set_target_speed(self.target_speed)
  
   def send_command(self, cmd, *data_bytes):
     if self.device_number == None:
@@ -66,35 +90,6 @@ class SmcG2Serial(object):
   def get_error_status(self):
     return self.get_variable(0)
 
-
-class PololuG2MotorController(object):
-  def __init__(device_number, port_name):
-    # Choose the serial port name.
-    # Linux USB example:  "/dev/ttyACM0"  (see also: /dev/serial/by-id)
-    # macOS USB example:  "/dev/cu.usbmodem001234562"
-    # Windows example:    "COM6"
-    self.port_name = port_name
-
-    # Change this to a number between 0 and 127 that matches the device number of
-    # your SMC if there are multiple serial devices on the line and you want to
-    # use the Pololu Protocol.
-    self.device_number = device_number
-
-    # Change this to a number between 0 and 127 that matches the device number of
-    # your SMC if there are multiple serial devices on the line and you want to
-    # use the Pololu Protocol.
-    self.baud_rate = BAUD_RATE
-
-    self.port = serial.Serial(self.port_name, self.baud_rate, timeout=0.1, write_timeout=0.1)
-    self.smc = SmcG2Serial(port, self.device_number)
-
-    self.smc.exit_safe_start()
-    self.set_speed(INITIAL_SPEED)
-  
-  def set_speed(speed):
-    self.speed = speed
-    self.target_speed = get_target_speed(self.speed)
-    self.smc.set_target_speed(self.target_speed)
-
 def get_target_speed(speed):
-  return 50
+  ratio = 1.0 * (MAX_TARGET_SPEED - MIN_TARGET_SPEED) / (MAX_SPEED - MIN_SPEED)
+  return int(speed * ratio)
