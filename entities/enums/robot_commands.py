@@ -1,0 +1,3 @@
+ROBOT_COMMANDS = {
+  "SET_SPEED": "SET_SPEED"
+}

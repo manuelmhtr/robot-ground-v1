@@ -19,5 +19,10 @@ def get_usb_port_name():
 
 def get_right_motor_config():
   return {
-    "device_number": getenv("RIGHT_MOTOR_DEVICE_NUMBER")
+    "device_number": int(getenv("RIGHT_MOTOR_DEVICE_NUMBER"))
+  }
+
+def get_left_motor_config():
+  return {
+    "device_number": int(getenv("LEFT_MOTOR_DEVICE_NUMBER"))
   }
