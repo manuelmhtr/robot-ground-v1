@@ -5,7 +5,6 @@
 # NOTE: You might need to change the "port_name =" line below to specify the
 #   right serial port.
 
-from infrastructure.config import get_usb_port_name
 import serial
 
 BAUD_RATE = 9600
@@ -16,7 +15,7 @@ MAX_TARGET_SPEED = 3200
 MIN_TARGET_SPEED = -3200
  
 class PololuG2MotorController(object):
-  def __init__(self, port_name, device_number):
+  def __init__(self, port_name):
     # Choose the serial port name.
     # Linux USB example:  "/dev/ttyACM0"  (see also: /dev/serial/by-id)
     # macOS USB example:  "/dev/cu.usbmodem001234562"
@@ -26,7 +25,7 @@ class PololuG2MotorController(object):
     # Change this to a number between 0 and 127 that matches the device number of
     # your SMC if there are multiple serial devices on the line and you want to
     # use the Pololu Protocol.
-    self.device_number = device_number
+    self.device_number = None
 
     # Change this to a number between 0 and 127 that matches the device number of
     # your SMC if there are multiple serial devices on the line and you want to

@@ -14,15 +14,14 @@ def get_pubnub_config():
 def get_robot_id():
   return getenv("ROBOT_ID")
 
-def get_usb_port_name():
-  return getenv("USB_PORT_NAME")
-
 def get_right_motor_config():
   return {
+    "port_name": int(getenv("RIGHT_MOTOR_PORT_NAME")),
     "device_number": int(getenv("RIGHT_MOTOR_DEVICE_NUMBER"))
   }
 
 def get_left_motor_config():
   return {
+    "port_name": int(getenv("LEFT_MOTOR_PORT_NAME")),
     "device_number": int(getenv("LEFT_MOTOR_DEVICE_NUMBER"))
   }

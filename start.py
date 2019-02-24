@@ -1,4 +1,4 @@
-from infrastructure.config import get_robot_id, get_usb_port_name, get_right_motor_config, get_left_motor_config
+from infrastructure.config import get_robot_id, get_right_motor_config, get_left_motor_config
 from infrastructure.motor_controllers.pololu_g2 import PololuG2MotorController
 from infrastructure.command_listeners.pubnub import PubnubCommandListener
 from controllers.robot import RobotController
@@ -12,15 +12,13 @@ def start_robot():
   controller.start()
 
 def get_right_motor_controller():
-  usb_port_name = get_usb_port_name()
   motor_config = get_right_motor_config()
-  device_number = motor_config["device_number"]
-  return PololuG2MotorController(usb_port_name, device_number)
+  port_name = motor_config["port_name"]
+  return PololuG2MotorController(port_name)
 
 def get_left_motor_controller():
-  usb_port_name = get_usb_port_name()
   motor_config = get_left_motor_config()
-  device_number = motor_config["device_number"]
-  return PololuG2MotorController(usb_port_name, device_number)
+  port_name = motor_config["port_name"]
+  return PololuG2MotorController(port_name)
 
 start_robot()
