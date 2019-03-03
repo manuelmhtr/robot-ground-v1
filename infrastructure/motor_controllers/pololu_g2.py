@@ -15,6 +15,9 @@ MAX_TARGET_SPEED = 3200
 MIN_TARGET_SPEED = -3200
  
 class PololuG2MotorController(object):
+  VOLTAGE_VARIABLE_ID = 23
+  SPEED_VARIABLE_ID = 21
+
   def __init__(self, port_name):
     # Choose the serial port name.
     # Linux USB example:  "/dev/ttyACM0"  (see also: /dev/serial/by-id)
@@ -41,6 +44,13 @@ class PololuG2MotorController(object):
     self.speed = speed
     self.target_speed = calculate_target_speed(self.speed)
     self.__set_target_speed(self.target_speed)
+
+  def get_speed(self):
+    target_speed = self.__get_variable_signed(self.VOLTAGE_VARIABLE_ID)
+    return calculate_speed(target_speed)
+
+  def get_voltage(self):
+    return self.__get_variable_signed(self.VOLTAGE_VARIABLE_ID)
  
   def __send_command(self, cmd, *data_bytes):
     if self.device_number == None:
@@ -91,3 +101,7 @@ class PololuG2MotorController(object):
 def calculate_target_speed(speed):
   ratio = 1.0 * (MAX_TARGET_SPEED - MIN_TARGET_SPEED) / (MAX_SPEED - MIN_SPEED)
   return int(speed * ratio)
+
+def calculate_speed(target_speed):
+  ratio = 1.0 * (MAX_SPEED - MIN_SPEED) / (MAX_TARGET_SPEED - MIN_TARGET_SPEED)
+  return int(target_speed * ratio)

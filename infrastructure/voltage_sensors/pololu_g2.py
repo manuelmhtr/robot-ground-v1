@@ -1,6 +1,9 @@
 class PololuG2VoltageSensor(object):
-  def __init__(self, pololu_g2_motor_controller):
-    self.motor_controller = pololu_g2_motor_controller
+  def __init__(self, pololu_g2_motor_controllers):
+    self.motor_controllers = pololu_g2_motor_controllers
 
   def get_voltage(self):
-    return "default voltage"
+    voltages = []
+    for motor_controller in self.motor_controllers:
+      voltages.append(motor_controller.get_voltage())
+    return sum(voltages) / len(voltages)
