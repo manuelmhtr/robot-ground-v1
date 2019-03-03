@@ -1,5 +1,5 @@
 class ConsoleMotorController(object):
-  def __init__(self, port_name):
+  def __init__(self):
     self.set_speed(0)
   
   def set_speed(self, speed):

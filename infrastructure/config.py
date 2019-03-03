@@ -3,6 +3,12 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+def get_env():
+  return getenv("ENV")
+
+def is_live_env():
+  return get_env() == "robot"
+
 def get_pubnub_config():
   return {
     "publish_key": getenv("PUBNUB_PUBLISH_KEY"),

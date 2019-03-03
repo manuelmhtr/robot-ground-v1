@@ -4,20 +4,17 @@ from entities.enums.robot_commands import ROBOT_COMMANDS
 from entities.enums.motor_names import MOTOR_NAMES
 
 class RobotController(object):
-  def __init__(self, robot, command_listener):
+  def __init__(self, robot, command_listener, status_publisher):
     self.robot = robot
     self.command_listener = command_listener
-  
+    self.status_publisher = status_publisher
+
   def start(self):
     self.command_listener.on(ROBOT_COMMANDS["SET_SPEED"], self.handle_set_speed)
     self.start_status_reporter()
 
   def start_status_reporter(self):
-    self.send_status()
-    threading.Timer(1, self.start_status_reporter).start()
-  
-  def send_status(self):
-    print(self.robot.get_status())
+    self.robot.on_change(self.status_publisher.publish)
 
   def handle_set_speed(self, data):
     motor = data["motor"]

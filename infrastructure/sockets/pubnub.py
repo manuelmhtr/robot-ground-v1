@@ -1,18 +1,10 @@
 import pubnub
 from infrastructure.config import get_pubnub_config
 from pubnub.pnconfiguration import PNConfiguration
-from pubnub.pubnub import PubNub, SubscribeListener
-
-class CommandListener(SubscribeListener):
-  def __init__(self, on_message):
-    self.on_message = on_message
-    super().__init__()
-
-  def message(self, pubnub, event):
-    self.on_message(event.message)
+from pubnub.pubnub import PubNub
 
 class PubnubSocket(object):
-  def __init__(self, channel, on_message):
+  def __init__(self):
     config = get_pubnub_config()
     pnconfig = PNConfiguration()
     pnconfig.subscribe_key = config["subscribe_key"]
@@ -20,8 +12,15 @@ class PubnubSocket(object):
     pnconfig.secret_key = config["secret_key"]
     pnconfig.ssl = config["ssl"]
 
-    self.on_message = on_message
-    self.listener = CommandListener(self.on_message)
     self.pubnub = PubNub(pnconfig)
-    self.pubnub.add_listener(self.listener)
+  
+  def add_listener(self, listener):
+    self.pubnub.add_listener(listener)
+
+  def subscribe(self, channel):
     self.pubnub.subscribe().channels(channel).execute()
+
+  def publish(self, channel, data):
+    self.pubnub.publish().channel(channel).message(data).sync()
+
+pubnub_socket = PubnubSocket()
