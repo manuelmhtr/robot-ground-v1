@@ -73,7 +73,9 @@ def get_command_listener(robot_id):
 
 def get_status_publisher(robot_id):
   channel = robot_id + ':status'
-  return PubnubStatusPublisher(channel)
-  return ConsoleStatusPublisher()
+  if is_live_env():
+    return PubnubStatusPublisher(channel)
+  else: 
+    return ConsoleStatusPublisher()
 
 start_robot()

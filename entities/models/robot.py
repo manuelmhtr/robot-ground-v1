@@ -22,3 +22,5 @@ class Robot(Component):
   def bind_change_listeners(self):
     self.left_motor.on_change(lambda data: self.report_change())
     self.right_motor.on_change(lambda data: self.report_change())
+    self.battery.on_change(lambda data: self.report_change())
+    self.gps.on_change(lambda data: self.report_change())

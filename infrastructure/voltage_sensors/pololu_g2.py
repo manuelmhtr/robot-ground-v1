@@ -6,4 +6,5 @@ class PololuG2VoltageSensor(object):
     voltages = []
     for motor_controller in self.motor_controllers:
       voltages.append(motor_controller.get_voltage())
-    return sum(voltages) / len(voltages)
+    miliVolts = sum(voltages) / len(voltages)
+    return miliVolts / 1000.0

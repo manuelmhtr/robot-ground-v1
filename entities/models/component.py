@@ -10,4 +10,4 @@ class Component(object):
       self.on_change_callback(self.get_status())
   
   def get_status(self):
-    return {}
+    raise Exception('Child class not implementing "get_status" method')

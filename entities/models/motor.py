@@ -7,7 +7,6 @@ class Motor(Component):
     self.set_speed(0)
 
   def set_speed(self, speed):
-    print('motor set speed')
     self.motor_controller.set_speed(speed)
     self.report_change()
 
