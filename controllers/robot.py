@@ -11,6 +11,7 @@ class RobotController(object):
 
   def start(self):
     self.command_listener.on(ROBOT_COMMANDS["SET_SPEED"], self.handle_set_speed)
+    self.command_listener.on(ROBOT_COMMANDS["SET_DRIVE"], self.handle_set_drive)
     self.start_status_reporter()
 
   def start_status_reporter(self):
@@ -23,3 +24,11 @@ class RobotController(object):
       self.robot.left_motor.set_speed(speed)
     elif (motor == MOTOR_NAMES["RIGHT"]):
       self.robot.right_motor.set_speed(speed)
+
+  def handle_set_drive(self, data):
+    speed = data["speed"]
+    turn = data["turn"]
+    left_motor_speed = speed + turn / 2
+    right_motor_speed = speed - turn / 2
+    self.robot.left_motor.set_speed(left_motor_speed)
+    self.robot.right_motor.set_speed(right_motor_speed)
